@@ -1,0 +1,80 @@
+// SPDX-License-Identifier: MIT
+pragma solidity ^0.8.0;
+
+contract ASCIIArtGenerator {
+
+    // Fonction pour générer un carré avec des dimensions aléatoires
+    function generateRandomSquare() public view returns (string memory) {
+        uint256 size = getRandomNumber() % 10 + 5; // Taille entre 5 et 15
+        string memory square = "";
+        for (uint256 i = 0; i < size; i++) {
+            square = string(abi.encodePacked(square, generateLine(size), "\n"));
+        }
+        return square;
+    }
+
+    // Fonction pour générer un triangle avec des dimensions aléatoires
+    function generateRandomTriangle() public view returns (string memory) {
+        uint256 height = getRandomNumber() % 10 + 5; // Hauteur entre 5 et 15
+        string memory triangle = "";
+        for (uint256 i = 1; i <= height; i++) {
+            string memory line = generateTriangleLine(i);
+            triangle = string(abi.encodePacked(triangle, line, "\n"));
+        }
+        return triangle;
+    }
+
+    // Fonction pour générer un cercle avec un rayon aléatoire
+    function generateRandomCircle() public view returns (string memory) {
+        uint256 radius = getRandomNumber() % 5 + 3; // Rayon entre 3 et 7
+        string memory circle = "";
+        for (uint256 y = 0; y <= radius * 2; y++) {
+            string memory line = "";
+            for (uint256 x = 0; x <= radius * 2; x++) {
+                if ((x - radius) * (x - radius) + (y - radius) * (y - radius) <= radius * radius) {
+                    line = string(abi.encodePacked(line, "#"));
+                } else {
+                    line = string(abi.encodePacked(line, " "));
+                }
+            }
+            circle = string(abi.encodePacked(circle, line, "\n"));
+        }
+        return circle;
+    }
+
+    // Fonction interne pour générer un nombre pseudo-aléatoire (basé sur les paramètres du bloc)
+    function getRandomNumber() internal view returns (uint256) {
+        return uint256(keccak256(abi.encodePacked(block.timestamp, block.difficulty))) % 100 + 1;
+    }
+
+    // Fonction pour générer une ligne pour un carré
+    function generateLine(uint256 size) internal pure returns (string memory) {
+        string memory line = "";
+        for (uint256 i = 0; i < size; i++) {
+            line = string(abi.encodePacked(line, "#"));
+        }
+        return line;
+    }
+
+    // Fonction pour générer une ligne pour un triangle
+    function generateTriangleLine(uint256 size) internal pure returns (string memory) {
+        string memory line = "";
+        for (uint256 i = 0; i < size; i++) {
+            line = string(abi.encodePacked(line, "#"));
+        }
+        return line;
+    }
+
+    // Fonction pour afficher un motif ASCII basé sur un type
+    function getASCIIArt(uint256 shapeType) public view returns (string memory) {
+        if (shapeType == 1) {
+            return generateRandomSquare();
+        } else if (shapeType == 2) {
+            return generateRandomTriangle();
+        } else if (shapeType == 3) {
+            return generateRandomCircle();
+        } else {
+            return "Motif invalide";
+        }
+    }
+}
